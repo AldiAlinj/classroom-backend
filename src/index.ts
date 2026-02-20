@@ -3,8 +3,12 @@ import subjectsRouter from "./routes/subjets";
 import cors from "cors";
 
 const app = express();
-
 const PORT = 8000;
+
+if(!process.env.FRONTEND_URL) {
+  throw new Error('FRONTEND_URL is not set in .env file');
+}
+
 app.use(express.json());
 app.use(cors({
   origin: process.env.FRONTEND_URL,
