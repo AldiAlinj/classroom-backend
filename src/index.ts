@@ -1,5 +1,5 @@
 import express from "express";
-import subjectsRouter from "./routes/subjets";
+import subjectsRouter from "./routes/subjects";
 import cors from "cors";
 
 const app = express();
