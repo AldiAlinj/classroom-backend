@@ -2,6 +2,8 @@ import express from "express";
 import subjectsRouter from "./routes/subjects";
 import cors from "cors";
 import securityMiddleware from "./middleware/security";
+import { auth } from "./lib/auth";
+import {toNodeHandler} from 'better-auth/node'
 
 const app = express();
 const PORT = 8000;
@@ -9,6 +11,8 @@ const PORT = 8000;
 if(!process.env.FRONTEND_URL) {
   throw new Error('FRONTEND_URL is not set in .env file');
 }
+
+app.all('/api/auth/*splat', toNodeHandler(auth.handler));
 
 app.use(express.json());
 app.use(cors({
