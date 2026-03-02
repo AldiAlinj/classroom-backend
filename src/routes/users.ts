@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
       );
     }
     if (role) {
-      filterConditions.push(eq(user.role, String(role)));
+      filterConditions.push(eq(user.role, role as "student" | "teacher" | "admin"));
     }
 
     const whereClause =
