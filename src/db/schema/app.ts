@@ -11,7 +11,7 @@ import {
     primaryKey
 } from "drizzle-orm/pg-core";
 import {relations} from "drizzle-orm";
-import {user} from "./auth.js";
+import {users} from "./auth.js";
 
 export const classStatusEnum = pgEnum('class_status', ['active', 'inactive', 'archived']);
 
@@ -40,7 +40,7 @@ export const subjects = pgTable('subjects', {
 export const classes = pgTable('classes', {
     id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
     subjectId: integer('subject_id').notNull().references(() => subjects.id, { onDelete: 'cascade' }),
-    teacherId: text('teacher_id').notNull().references(() => user.id, { onDelete: 'restrict' }),
+    teacherId: text('teacher_id').notNull().references(() => users.id, { onDelete: 'restrict' }),
     inviteCode: text('invite_code').notNull().unique(),
     name: varchar('name', {length: 255}).notNull(),
     bannerCldPubId: text('banner_cld_pub_id'),
@@ -56,7 +56,7 @@ export const classes = pgTable('classes', {
 ]);
 
 export const enrollments = pgTable('enrollments', {
-    studentId: text('student_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+    studentId: text('student_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
     classId: integer('class_id').notNull().references(() => classes.id, { onDelete: 'cascade' }),
 }, (table) => [
     primaryKey({ columns: [table.studentId, table.classId] }),
@@ -80,17 +80,17 @@ export const classesRelations = relations(classes, ({ one, many }) => ({
         fields: [classes.subjectId],
         references: [subjects.id],
     }),
-    teacher: one(user, {
+    teacher: one(users, {
         fields: [classes.teacherId],
-        references: [user.id],
+        references: [users.id],
     }),
     enrollments: many(enrollments)
 }));
 
 export const enrollmentsRelations = relations(enrollments, ({ one }) => ({
-    student: one(user, {
+    student: one(users, {
         fields: [enrollments.studentId],
-        references: [user.id],
+        references: [users.id],
     }),
     class: one(classes, {
         fields: [enrollments.classId],

@@ -1,6 +1,6 @@
 import { and, desc, eq, getTableColumns, ilike, or, sql } from "drizzle-orm";
 import express from "express";
-import { user } from "../db/schema/index.js";
+import { users } from "../db/schema/index.js";
 import { db } from "../db/index.js";
 
 const router = express.Router();
@@ -18,13 +18,13 @@ router.get("/", async (req, res) => {
     if (search) {
       filterConditions.push(
         or(
-          ilike(user.name, `%${search}%`),
-          ilike(user.email, `%${search}%`),
+          ilike(users.name, `%${search}%`),
+          ilike(users.email, `%${search}%`),
         ),
       );
     }
     if (role) {
-      filterConditions.push(eq(user.role, role as "student" | "teacher" | "admin"));
+      filterConditions.push(eq(users.role, role as "student" | "teacher" | "admin"));
     }
 
     const whereClause =
@@ -32,18 +32,18 @@ router.get("/", async (req, res) => {
 
     const countResult = await db
       .select({ count: sql<number>`count(*)` })
-      .from(user)
+      .from(users)
       .where(whereClause);
 
     const totalCount = countResult[0]?.count || 0;
 
     const usersList = await db
       .select({
-        ...getTableColumns(user),
+        ...getTableColumns(users),
       })
-      .from(user)
+      .from(users)
       .where(whereClause)
-      .orderBy(desc(user.createdAt))
+      .orderBy(desc(users.createdAt))
       .limit(limitPerPage)
       .offset(offset);
 

@@ -15,6 +15,13 @@
       "when": 1772020805192,
       "tag": "0001_light_gorgon",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772532936158,
+      "tag": "0002_bright_christian_walker",
+      "breakpoints": true
     }
   ]
 }
